@@ -10,7 +10,7 @@ export class AIServiceBotStack extends cdk.Stack {
 
     // 🗃️ DynamoDB-Tabelle zur Speicherung der Konversationshistorie
     const table = new dynamodb.Table(this, 'ConversationHistory', {
-      tableName: 'ConversationHistory',
+      tableName: 'ConversationHistory2314',
       partitionKey: { name: 'conversationId', type: dynamodb.AttributeType.STRING },
       sortKey: { name: 'timestamp', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
