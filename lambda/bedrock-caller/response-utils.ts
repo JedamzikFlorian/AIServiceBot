@@ -1,16 +1,22 @@
+const rules = require('./rules.json');
+
 export function validateAndFormatResponse(text: string): { final: string, route: boolean } {
   let route = false;
   let modified = text.trim();
 
-  // Beispielregel 1: Keine Antwort → Routing
-  if (/weiß ich nicht|kann ich nicht beantworten/i.test(modified)) {
-    route = true;
-    modified += '\n\n🧑‍💼 Unsere Experten werden sich persönlich bei Ihnen melden.';
-  }
+  for (const rule of rules) {
+    const regex = new RegExp(rule.pattern, 'i');
 
-  // Beispielregel 2: Supportanfrage
-  if (/telefonnummer|kontakt|support/i.test(modified)) {
-    modified += '\n\n📞 Kontakt: https://example.com/support';
+    if (regex.test(modified)) {
+      switch (rule.action) {
+        case 'route':
+          route = true;
+          break;
+        case 'append_support_link':
+          modified += '\n\n📞 Kontakt: https://example.com/support';
+          break;
+      }
+    }
   }
 
   return { final: modified, route };

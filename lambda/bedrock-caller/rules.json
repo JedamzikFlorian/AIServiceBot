@@ -1,0 +1,12 @@
+[
+  {
+    "id": "R1",
+    "pattern": "weiß ich nicht|nicht sicher|leider keine information",
+    "action": "route"
+  },
+  {
+    "id": "R2",
+    "pattern": "support|kontakt|telefonnummer|email",
+    "action": "append_support_link"
+  }
+]
