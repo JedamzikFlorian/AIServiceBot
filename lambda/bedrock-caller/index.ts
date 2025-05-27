@@ -1,5 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { invokeClaudeHaiku } from './haiku-client';
+import { validateAndFormatResponse } from './response-utils';
 
 
 export const handler = async (
@@ -16,16 +17,21 @@ export const handler = async (
     }
 
     try {
-        const completion = await invokeClaudeHaiku(prompt);
+        const raw = await invokeClaudeHaiku(prompt);
+        const { final, route } = validateAndFormatResponse(raw);
+
         return {
             statusCode: 200,
-            body: JSON.stringify({completion}),
+            body: JSON.stringify({
+                completion: final,
+                routingFlag: route,
+            }),
         };
     } catch (err) {
         console.error(err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to invoke Cluade Haiku' }),
+            body: JSON.stringify({ error: 'Failed to invoke Claude Haiku' }),
         };
     }
 };

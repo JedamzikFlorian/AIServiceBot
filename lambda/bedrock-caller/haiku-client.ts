@@ -4,12 +4,18 @@ const client = new BedrockRuntimeClient({ region: 'eu-central-1' });
 
 export async function invokeClaudeHaiku(prompt: string): Promise<string> {
     const input = {
-        modelId: 'anthropic.claude-3-haiku-20240307',
+        modelId: 'anthropic.claude-3-haiku-20240307-v1:0',
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify({
-            prompt: `\n\nHuman: ${prompt}\n\nAssistant:`,
-            max_tokens_to_sample: 300,
+            anthropic_version: "bedrock-2023-05-31",
+            messages: [
+                {
+                    role: 'user',
+                    content: prompt,
+                },
+            ],
+            max_tokens: 300,
             temperature: 0.7,
         }),
     };
@@ -19,6 +25,6 @@ export async function invokeClaudeHaiku(prompt: string): Promise<string> {
     const responseBody = new TextDecoder().decode(response.body);
     const parsed = JSON.parse(responseBody);
     
-    return parsed.completion;
+    return parsed.content[0].text;
 
 }
