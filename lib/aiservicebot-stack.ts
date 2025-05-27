@@ -5,6 +5,10 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as path from 'path';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as cw from 'aws-cdk-lib/aws-cloudwatch';
+import * as cw_actions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 
 export class AIServiceBotStack extends cdk.Stack {
@@ -67,5 +71,40 @@ export class AIServiceBotStack extends cdk.Stack {
     chat.addMethod('POST', new apigateway.LambdaIntegration(bedrockCaller), {
       operationName: 'PostChatPrompt',
     });
+
+    const alarmTopic = new sns.Topic(this, 'ChatbotAlarmTopic', {
+      displayName: 'Chatbot Alarm Topic',
+    });
+
+    const errorAlarm = new cw.Alarm(this, 'BedrockErrorAlarm', {
+      metric: bedrockCaller.metricErrors(),
+      threshold: 1,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      treatMissingData: cw.TreatMissingData.NOT_BREACHING,
+      alarmDescription: 'Fehlgeschlagene Lambda-Ausführungen',
+    });
+
+    errorAlarm.addAlarmAction(new cw_actions.SnsAction(alarmTopic));
+
+
+    const latencyAlarm = new cw.Alarm(this, 'BedrockLatencyAlarm', {
+      metric: bedrockCaller.metricDuration(),
+      threshold: 9000,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      treatMissingData: cw.TreatMissingData.NOT_BREACHING,
+      alarmDescription: 'Claude antwortet zu langsam',
+    });
+
+    latencyAlarm.addAlarmAction(new cw_actions.SnsAction(alarmTopic));
+
+
+
+  // E-Mail-Adresse (ändern nach Bedarf!)
+    alarmTopic.addSubscription(
+      new subscriptions.EmailSubscription('my.email@gmail.com')
+    );
+    
   }
 }
