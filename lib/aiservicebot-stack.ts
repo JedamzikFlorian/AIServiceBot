@@ -45,6 +45,9 @@ export class AIServiceBotStack extends cdk.Stack {
       bundling: {
         externalModules: ['@aws-sdk/client-bedrock-runtime'],
       },
+      environment: {
+      TABLE_NAME: table.tableName,
+      },
     });
 
     // 🌐 API Gateway REST API mit /chat POST-Route
@@ -100,11 +103,12 @@ export class AIServiceBotStack extends cdk.Stack {
     latencyAlarm.addAlarmAction(new cw_actions.SnsAction(alarmTopic));
 
 
-
   // E-Mail-Adresse (ändern nach Bedarf!)
     alarmTopic.addSubscription(
       new subscriptions.EmailSubscription('my.email@gmail.com')
     );
+
+    table.grantWriteData(bedrockCaller);
     
   }
 }
