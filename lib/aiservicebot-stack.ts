@@ -19,7 +19,7 @@ export class AIServiceBotStack extends cdk.Stack {
     });
 
     // 🧠 Lambda zur Prompt-Erstellung inkl. Kontext-Abruf
-    const promptBuilder = new lambda.Function(this, 'PromptBuilderFunction2314', {
+    const promptBuilder = new lambda.Function(this, 'PromptBuilderFunction', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/prompt-builder')),
@@ -28,7 +28,7 @@ export class AIServiceBotStack extends cdk.Stack {
       },
     });
 
-    const bedrockCaller = new lambda.Function(this, 'BedrockCallerFunction2314', {
+    const bedrockCaller = new lambda.Function(this, 'BedrockCallerFunction', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/bedrock-caller')),
