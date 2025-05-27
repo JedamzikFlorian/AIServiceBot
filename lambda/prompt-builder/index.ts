@@ -9,34 +9,33 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 export const handler = async (
-  event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-  const body = JSON.parse(event.body || '{}');
-  const { conversationId, userId, message } = body;
+  event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    const body = JSON.parse(event.body || '{}');
+    const { conversationId, userId, message } = body;
 
-  const previousMessages = await docClient.send(
-    new QueryCommand({
-      TableName: process.env.TABLE_NAME,
-      KeyConditionExpression: 'conversationId = :cid',
-      ExpressionAttributeValues: {
-        ':cid': conversationId,
-      },
-      ScanIndexForward: false,
-      Limit: 5,
-    })
-  );
+    const previousMessages = await docClient.send(
+        new QueryCommand({
+        TableName: process.env.TABLE_NAME,
+        KeyConditionExpression: 'conversationId = :cid',
+        ExpressionAttributeValues: {
+            ':cid': conversationId,
+        },
+        ScanIndexForward: false,
+        Limit: 5,
+        })
+    );
 
-  const prompt = buildPrompt(previousMessages.Items || [], message);
+    const prompt = buildPrompt(previousMessages.Items || [], message);
 
-  if (!isPromptSafe(prompt)) {
+    if (!isPromptSafe(prompt)) {
+        return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Unsafe input detected' }),
+        };
+    }
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Unsafe input detected' }),
+        statusCode: 200,
+        body: JSON.stringify({ prompt }),
     };
-  }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ prompt }),
-  };
 };
