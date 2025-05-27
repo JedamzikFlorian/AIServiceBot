@@ -33,7 +33,7 @@ export class AIServiceBotStack extends cdk.Stack {
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda/bedrock-caller')),
       environment: {},
-    })
+    });
 
     // 🔐 Rechte für DynamoDB-Zugriff geben
     table.grantReadData(promptBuilder);
