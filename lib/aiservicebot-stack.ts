@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 
-export class AIServerBotStack extends cdk.Stack {
+export class AIServiceBotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
