@@ -1,6 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 
-const client = new BedrockRuntimeClient({ region: 'eu-cnetral-1' });
+const client = new BedrockRuntimeClient({ region: 'eu-central-1' });
 
 export async function invokeClaudeHaiku(prompt: string): Promise<string> {
     const input = {
