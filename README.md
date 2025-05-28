@@ -4,6 +4,8 @@ This project implements a **rule-based, AI-powered customer service chatbot** us
 
 ---
 
+## 🧠 Architecture Overview
+
 <p align="center">
   <img src="docs/AIServiceBot.png" width="600" alt="Architecture Diagram">
 </p>
@@ -18,25 +20,6 @@ This project implements a **rule-based, AI-powered customer service chatbot** us
 - CloudWatch monitoring (errors & latency) with SNS alerts
 
 ---
-
-## 🧠 Architecture Overview
-
-
-[ Client (e.g., curl / web app) ]
-          │
-          ▼
-[ Amazon API Gateway ]
-          │
-          ▼
-[ BedrockCaller Lambda Function ]
-          │
-          ├─▶ Call: Claude 3 Haiku via Amazon Bedrock
-          │
-          ├─▶ Response validation using response-utils.ts + rules.json
-          │
-          ├─▶ Store conversation in DynamoDB (Table: ConversationHistory)
-          │
-          └─▶ Monitoring: CloudWatch + alerts via SNS
 
 
 🛠️ Technologies & AWS Services
