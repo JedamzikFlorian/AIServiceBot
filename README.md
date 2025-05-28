@@ -47,21 +47,6 @@ curl -X POST https://<API-ID>.execute-api.eu-central-1.amazonaws.com/prod/chat \
 
 
 
-.
-├── bin/
-│   └── aiservicebot.ts            # CDK app entry point
-├── lib/
-│   └── aiservicebot-stack.ts      # Main stack: Lambda, API Gateway, DynamoDB, SNS, CloudWatch
-├── lambda/
-│   └── bedrock-caller/
-│       ├── index.ts               # Lambda handler
-│       ├── haiku-client.ts        # Bedrock invocation logic
-│       ├── response-utils.ts      # Response modification & routing logic
-│       └── rules.json             # Pattern-based response rules
-│
-└── README.md                      # This document
-
-
 📦 Deployment
 Prerequisites
 
