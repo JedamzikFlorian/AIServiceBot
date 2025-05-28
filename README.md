@@ -1,8 +1,90 @@
-# Welcome to your CDK TypeScript project
+# 🤖 AI Service Bot – Serverless Customer Support with Amazon Bedrock
 
-This is a blank project for CDK development with TypeScript.
+This project implements a **rule-based, AI-powered customer service chatbot** using **Amazon Bedrock (Claude 3 Haiku)**. The architecture is fully **serverless** and follows the **AWS Well-Architected Framework**, focusing on **Operational Excellence**, **Security**, **Reliability**, and **Performance Efficiency**.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+---
+
+<p align="center">
+  <img src="docs/AIServiceBot.png" width="600" alt="Architecture Diagram">
+</p>
+
+
+## 🚀 Current Functionality (Phase 6)
+
+- API Gateway-based chat endpoint (`/chat`)
+- Invocation of Claude 3 Haiku via Amazon Bedrock
+- Response validation and modification using `rules.json` (e.g., routing, support links)
+- Conversation history stored in DynamoDB
+- CloudWatch monitoring (errors & latency) with SNS alerts
+
+---
+
+## 🧠 Architecture Overview
+
+
+[ Client (e.g., curl / web app) ]
+          │
+          ▼
+[ Amazon API Gateway ]
+          │
+          ▼
+[ BedrockCaller Lambda Function ]
+          │
+          ├─▶ Call: Claude 3 Haiku via Amazon Bedrock
+          │
+          ├─▶ Response validation using response-utils.ts + rules.json
+          │
+          ├─▶ Store conversation in DynamoDB (Table: ConversationHistory)
+          │
+          └─▶ Monitoring: CloudWatch + alerts via SNS
+
+
+🛠️ Technologies & AWS Services
+
+Amazon API Gateway
+
+AWS Lambda (Node.js 18.x)
+
+Amazon Bedrock (Claude 3 Haiku)
+
+Amazon DynamoDB
+
+Amazon CloudWatch
+
+Amazon SNS
+
+AWS CDK (TypeScript)
+
+
+🧪 Sample Request
+
+curl -X POST https://<API-ID>.execute-api.eu-central-1.amazonaws.com/prod/chat \
+  -H "Content-Type: application/json" \
+  -d '{ "prompt": "What is the meaning of life?" }'
+
+
+
+.
+├── bin/
+│   └── aiservicebot.ts            # CDK app entry point
+├── lib/
+│   └── aiservicebot-stack.ts      # Main stack: Lambda, API Gateway, DynamoDB, SNS, CloudWatch
+├── lambda/
+│   └── bedrock-caller/
+│       ├── index.ts               # Lambda handler
+│       ├── haiku-client.ts        # Bedrock invocation logic
+│       ├── response-utils.ts      # Response modification & routing logic
+│       └── rules.json             # Pattern-based response rules
+│
+└── README.md                      # This document
+
+
+📦 Deployment
+Prerequisites
+
+AWS CLI configured
+AWS CDK installed (npm install -g aws-cdk)
+Amazon Bedrock enabled in region eu-central-1
 
 ## Useful commands
 
@@ -12,3 +94,9 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk deploy`  deploy this stack to your default AWS account/region
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
+
+
+🔥 Author
+Florian Jedamzik
+Cloud Architect & AWS Enthusiast
+📧 florian.jedamzik@apt.com
