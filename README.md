@@ -67,4 +67,3 @@ Amazon Bedrock enabled in region eu-central-1
 🔥 Author
 Florian Jedamzik
 Cloud Architect & AWS Enthusiast
-📧 florian.jedamzik@apt.com
